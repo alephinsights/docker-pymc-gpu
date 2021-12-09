@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  jupyter:
+    # image: nvcr.io/nvidia/tensorflow:21.11-tf2-py3
+    build:
+      context: .
+      dockerfile: conda.Dockerfile
+    image: aleph-cuda-pymc3-conda:latest
+    container_name: pymc3-cuda
+    environment:
+      CUDA_PATH: /usr/local/cuda-11.4
+      # THEANO_FLAGS: "floatX=float32,device=cuda0"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    ports:
+      - 8888:8888
+    volumes:
+      - ./notebooks:/home/jupyter/work
