@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  jupyter:
+    build:
+      context: .
+    image: aleph-pip-cuda8-pymc3:latest
+    container_name: pymc3-cuda
+    environment:
+      CUDA_PATH: /usr/local/cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    ports:
+      - 8888:8888
+    volumes:
+      - ../notebooks:/home/jupyter/work
+      - ../.theanorc:/home/jupyter/.theanorc

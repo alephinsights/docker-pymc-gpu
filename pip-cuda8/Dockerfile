@@ -1,9 +1,8 @@
-FROM nvidia/cuda:11.4.2-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 
 ENV TZ=Europe/London
 
-RUN apt update && apt upgrade -y -qq && \
-    apt install -y curl python3 python3-pip python3-dev python3-setuptools && \
+RUN apt-get update && apt-get upgrade -y -qq && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y \
         build-essential \
         wget \
@@ -11,15 +10,7 @@ RUN apt update && apt upgrade -y -qq && \
         curl \
         unzip \
         nano && \
-    apt autoremove && apt clean && \
-    ln -s /usr/bin/python3 /usr/bin/python
-
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
-RUN export JAVA_HOME && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y openjdk-11-jdk \ 
-    ca-certificates-java && \
-    update-ca-certificates -f && \
-    apt-get autoclean && apt-get clean
+    apt-get autoremove && apt-get clean
 
 ENV CONDA_DIR /opt/conda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
@@ -27,23 +18,21 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
 # Put conda in path so we can use conda activate
 ENV PATH=$CONDA_DIR/bin:$PATH
 
+# Install things definily needed
+RUN conda install -c conda-forge jupyterlab && \
+    conda clean -a -y
+
 ADD requirements.txt /tmp
 RUN pip install -r /tmp/requirements.txt --no-cache-dir
-# RUN conda install -c conda-forge pygpu
+
+RUN conda install -c conda-forge pygpu==0.7.6 && \
+    conda clean -a -y
 
 ENV CUDA_HOME /usr/local/cuda
 ENV LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 
-ENV CONDA_LIB_DIR /opt/conda
-ENV LD_LIBRARY_PATH=$CONDA_LIB_DIR/bin:$LD_LIBRARY_PATH
-
-
-
-
 RUN useradd -ms /bin/bash jupyter
 USER jupyter
 WORKDIR /home/jupyter/work
-
-ADD .theanorc /home/jupyter
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]

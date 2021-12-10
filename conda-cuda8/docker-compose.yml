@@ -2,14 +2,13 @@ version: "3"
 
 services:
   jupyter:
-    # image: nvcr.io/nvidia/tensorflow:21.11-tf2-py3
     build:
       context: .
-    image: aleph-cuda-pymc3:latest
+      dockerfile: Dockerfile
+    image: aleph-cuda-pymc3-conda:cuda-8-cudnn-6
     container_name: pymc3-cuda
     environment:
-      CUDA_PATH: /usr/local/cuda-11.4
-      # THEANO_FLAGS: "floatX=float32,device=cuda0"
+      CUDA_PATH: /usr/local/cuda
     deploy:
       resources:
         reservations:
@@ -19,4 +18,5 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - ./notebooks:/home/jupyter/work
+      - ../notebooks:/home/jupyter/work
+      - ../.theanorc:/home/jupyter/.theanorc

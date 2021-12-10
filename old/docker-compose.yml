@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  jupyter:
+    image: gcr.io/kaggle-gpu-images/python:v107
+    container_name: kaggle-gpu-images
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    ports:
+      - 8888:8888
+    command:
+      [
+        "mkdir",
+        "/work",
+        "&&",
+        "cd",
+        "/work",
+        "&&",
+        "jupyter",
+        "notebook",
+        "--port=8888",
+        "--no-browser",
+        "--ip=0.0.0.0",
+        "--allow-root",
+      ]
+    volumes:
+      - ./notebooks:/work
+      # - ../.theanorc:/home/jupyter/.theanorc
