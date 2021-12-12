@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: aleph-cuda-pymc3v4-conda:conda-pymc3v4-cuda-11.4.2-cudnn-8
+    container_name: pymc3-cuda
+    environment:
+      CUDA_PATH: /usr/local/cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    ports:
+      - 8888:8888
+    volumes:
+      - ../notebooks:/home/jupyter/work
+      - ../.aesararc:/home/jupyter/.aesararc
