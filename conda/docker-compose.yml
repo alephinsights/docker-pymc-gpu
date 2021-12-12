@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: aleph-cuda-pymc3-conda:cuda-9-cudnn-7
+    image: aleph-cuda-pymc3-conda:cuda-10.2-cudnn-7
     container_name: pymc3-cuda
     environment:
       CUDA_PATH: /usr/local/cuda

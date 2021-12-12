@@ -1,11 +1,13 @@
 # FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
-FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 
 ENV TZ=Europe/London
 
 RUN apt update && apt upgrade -y -qq && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y \
         build-essential \
+        gcc \
+        g++ \
         wget \
         git \
         curl \
@@ -24,7 +26,7 @@ RUN conda install -c conda-forge jupyterlab && \
     conda clean -a -y
 
 # Messing around with various versions of pymc3 etc
-RUN conda install -c conda-forge python=3.7 pymc3 theano-pymc mkl mkl-service && \
+RUN conda install -c conda-forge python=3.8 pymc3 theano-pymc mkl mkl-service && \
     conda clean -a -y
 
 RUN conda install pygpu && \
