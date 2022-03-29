@@ -38,10 +38,7 @@ RUN mamba install -y -c conda-forge pymc && \
 
 RUN pip3 install numpy scipy six wheel jaxlib==0.3.0+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 
-RUN pip3 install aeppl==0.0.17 numpyro 
-
 RUN pip3 install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html  # Note: wheels only available on linux.
-
 
 RUN useradd -ms /bin/bash jupyter
 USER jupyter

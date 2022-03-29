@@ -7,7 +7,6 @@ floatX = float32
 library_path = /usr/local/cuda/lib64
 bin_path = /usr/local/cuda/lib64
 include_path = /usr/local/cuda/include
-enabled = True
 
 [blas]
 ldflags=-lopenblas
